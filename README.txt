@@ -167,6 +167,41 @@ be faster than the default SQL based one when using both servers on the same box
 Both backends, thanks to the Redis WATCH, MULTI and EXEC commands provides a
 real race condition free mutexes if you use Redis >= 2.1.0.
 
+Client sharding
+===============
+
+Both PhpRedis and Predis allows client-side sharding to happen, for this you
+need to configure multiple servers at once.
+
+Note that this featured happened quite some time after the module was first
+released, and if you use this way of configuring servers, all other settings
+will be ignored.
+
+Register your servers into the settings.php file:
+
+  // Client sharding:
+  $conf['redis_client_servers'] = array(
+    array(
+      'host' => '1.2.3.4',
+      'port' => 1234,
+      'base' => 12,
+    ),
+    array(
+      'host' => '5.6.7.8',
+      'port' => 1234,
+      'password' => "some password",
+    ),
+    // ...
+  );
+
+All 5 of 'host', 'port', 'base', 'password' and 'username' values are valid
+for each server, and that the 'host' is the only one being mandatory.
+
+Warning: assuming that you know Redis enough, you should know that if you
+change your servers configuration after you started using it, you will loose
+your data due to the fact that Redis cannot re-shard data by itself. You must
+flush all your Redis servers instance after each configuration change.
+
 Testing
 =======
 

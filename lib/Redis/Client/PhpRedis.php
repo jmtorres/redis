@@ -6,6 +6,7 @@
 class Redis_Client_PhpRedis implements Redis_Client_Interface {
 
   public function getClient($host = NULL, $port = NULL, $base = NULL, $password = NULL) {
+
     $client = new Redis;
     $client->connect($host, $port);
 

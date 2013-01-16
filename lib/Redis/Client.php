@@ -118,7 +118,6 @@ class Redis_Client {
     if (!isset(self::$_client)) {
       global $conf;
 
-      // Always prefer socket connection.
       self::$_client = self::getClientInterface()->getClient(
         isset($conf['redis_client_host']) ? $conf['redis_client_host'] : self::REDIS_DEFAULT_HOST,
         isset($conf['redis_client_port']) ? $conf['redis_client_port'] : self::REDIS_DEFAULT_PORT,
