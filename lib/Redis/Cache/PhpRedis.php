@@ -17,10 +17,6 @@ class Redis_Cache_PhpRedis extends Redis_Cache_Base {
 
     $cached = (object)$cached;
 
-    if ($cached->serialized) {
-      $cached->data = unserialize($cached->data);
-    }
-
     return $cached;
   }
 
@@ -39,10 +35,6 @@ class Redis_Cache_PhpRedis extends Redis_Cache_Base {
     foreach ($replies as $reply) {
       if (!empty($reply)) {
         $cached = (object)$reply;
-
-        if ($cached->serialized) {
-          $cached->data = unserialize($cached->data);
-        }
 
         $ret[$cached->cid] = $cached;
       }
@@ -67,15 +59,7 @@ class Redis_Cache_PhpRedis extends Redis_Cache_Base {
       'expire' => $expire,
     );
 
-    // Let Redis handle the data types itself.
-    if (!is_scalar($data)) {
-      $hash['data'] = serialize($data);
-      $hash['serialized'] = 1;
-    }
-    else {
-      $hash['data'] = $data;
-      $hash['serialized'] = 0;
-    }
+    $hash['data'] = $data;
 
     $pipe = $client->multi(Redis::PIPELINE);
     $pipe->hmset($key, $hash);
